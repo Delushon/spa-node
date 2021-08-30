@@ -6,10 +6,50 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <script type="text/javascript">
-        window.location.href = '#home'
+
 
         var jsonAll
-        var jsonTop
+
+        var getJSON = function (url, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.responseType = 'json';
+            xhr.onload = function () {
+                callback(null, xhr.response);
+
+            };
+            xhr.send();
+        }
+        getJSON('http://localhost:3333/getJson', function (err, data) {
+            jsonAll = data.sort(function (a, b) {
+                var thisExpA = 0
+                var thisMoneyA = 0
+
+                for (let i = 0; i < JSON.parse(a.resources).length; i++) {
+                    if (JSON.parse(a.resources)[i].resource == 'MONEY') {
+                        thisMoneyA += JSON.parse(a.resources)[i].value
+                    } else {
+                        thisExpA += JSON.parse(a.resources)[i].value
+                    }
+                }
+
+                var thisExpB = 0
+                var thisMoneyB = 0
+
+                for (let i = 0; i < JSON.parse(b.resources).length; i++) {
+                    if (JSON.parse(b.resources)[i].resource == 'MONEY') {
+                        thisMoneyB += JSON.parse(b.resources)[i].value
+                    } else {
+                        thisExpB += JSON.parse(b.resources)[i].value
+                    }
+                }
+
+                return -((thisExpA + thisMoneyA) - (thisExpB + thisMoneyB))
+            })
+        })
+
+
+        window.location.href = '#home'
 
         function buttonStartAction() {
             window.location.href = '#home'
@@ -32,27 +72,101 @@
         }
 
         function buildTableTop() {
+
             var oTBody = document.getElementById('tableView').tBodies[0];
-            var oAsks = jsonTop
+            clearTable()
+            var oAsks = jsonAll
+            var num = 0
+            var expAndMoney = 99999
             oAsks.forEach(function (oItem) {
-                var oRow = oTBody.insertRow();
-                for (key in oItem) {
-                    var oCell = oRow.insertCell();
-                    oCell.innerHTML = oItem[key];
+
+
+                var thisExp = 0
+                var thisMoney = 0
+
+                for (let i = 0; i < JSON.parse(oItem.resources).length; i++) {
+                    if (JSON.parse(oItem.resources)[i].resource == 'MONEY') {
+                        thisMoney += JSON.parse(oItem.resources)[i].value
+                    } else {
+                        thisExp += JSON.parse(oItem.resources)[i].value
+                    }
                 }
+
+                if (thisExp + thisMoney < expAndMoney) {
+                    expAndMoney = thisExp + thisMoney
+                    num++
+                }
+
+
+                if (num <= 5) {
+
+                    var oRow = oTBody.insertRow();
+
+                    var oCellNum = oRow.insertCell();
+                    oCellNum.innerHTML = num
+                    var oCellFIO = oRow.insertCell();
+                    oCellFIO.innerHTML = oItem.fio
+                    var oCellStatus = oRow.insertCell();
+                    oCellStatus.innerHTML = oItem.level
+                    var oCellExp = oRow.insertCell();
+                    oCellExp.innerHTML = thisExp
+                    var oCellMoney = oRow.insertCell();
+                    oCellMoney.innerHTML = thisMoney
+                }
+
+
             });
         }
 
         function buildTableAll() {
+
             var oTBody = document.getElementById('tableView').tBodies[0];
+            clearTable()
             var oAsks = jsonAll
+            var num = 0
+            var expAndMoney = 99999
             oAsks.forEach(function (oItem) {
-                var oRow = oTBody.insertRow();
-                for (key in oItem) {
-                    var oCell = oRow.insertCell();
-                    oCell.innerHTML = oItem[key];
+
+
+                var thisExp = 0
+                var thisMoney = 0
+
+                for (let i = 0; i < JSON.parse(oItem.resources).length; i++) {
+                    if (JSON.parse(oItem.resources)[i].resource == 'MONEY') {
+                        thisMoney += JSON.parse(oItem.resources)[i].value
+                    } else {
+                        thisExp += JSON.parse(oItem.resources)[i].value
+                    }
                 }
+
+                if (thisExp + thisMoney < expAndMoney) {
+                    expAndMoney = thisExp + thisMoney
+                    num++
+                }
+
+
+                var oRow = oTBody.insertRow();
+
+                var oCellNum = oRow.insertCell();
+                oCellNum.innerHTML = num
+                var oCellFIO = oRow.insertCell();
+                oCellFIO.innerHTML = oItem.fio
+                var oCellStatus = oRow.insertCell();
+                oCellStatus.innerHTML = oItem.level
+                var oCellExp = oRow.insertCell();
+                oCellExp.innerHTML = thisExp
+                var oCellMoney = oRow.insertCell();
+                oCellMoney.innerHTML = thisMoney
+
+
             });
+        }
+
+        function clearTable() {
+            var tableRef = document.getElementById('tableView');
+            while (tableRef.rows.length > 0) {
+                tableRef.deleteRow(0);
+            }
         }
     </script>
 </head>
@@ -77,11 +191,6 @@
     </thead>
     <tbody>
     <tr>
-        <td>11</td>
-        <td>22</td>
-        <td>33</td>
-        <td>44</td>
-        <td>55</td>
     </tr>
     </tbody>
 </table>
