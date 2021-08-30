@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8"/>
+    <title>Заголовок</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script type="text/javascript">
+        window.location.href = '#home'
+
+        var jsonAll
+        var jsonTop
+
+        function buttonStartAction() {
+            window.location.href = '#home'
+            document.getElementById("tableView").style.visibility = "hidden";
+            document.getElementById("startText").style.visibility = "visible";
+        }
+
+        function buttonTopAction() {
+            window.location.href = '#top'
+            document.getElementById("tableView").style.visibility = "visible";
+            document.getElementById("startText").style.visibility = "hidden";
+            buildTableTop()
+        }
+
+        function buttonAllAction() {
+            window.location.href = '#full'
+            document.getElementById("tableView").style.visibility = "visible";
+            document.getElementById("startText").style.visibility = "hidden";
+            buildTableAll()
+        }
+
+        function buildTableTop() {
+            var oTBody = document.getElementById('tableView').tBodies[0];
+            var oAsks = jsonTop
+            oAsks.forEach(function (oItem) {
+                var oRow = oTBody.insertRow();
+                for (key in oItem) {
+                    var oCell = oRow.insertCell();
+                    oCell.innerHTML = oItem[key];
+                }
+            });
+        }
+
+        function buildTableAll() {
+            var oTBody = document.getElementById('tableView').tBodies[0];
+            var oAsks = jsonAll
+            oAsks.forEach(function (oItem) {
+                var oRow = oTBody.insertRow();
+                for (key in oItem) {
+                    var oCell = oRow.insertCell();
+                    oCell.innerHTML = oItem[key];
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<br>
+<div class="container">
+    <button type="button" class="btn btn-primary btn-lg" onclick="buttonStartAction()">Начало</button>
+    <button type="button" class="btn btn-primary btn-lg" onclick="buttonTopAction()">Топ 5</button>
+    <button type="button" class="btn btn-primary btn-lg" onclick="buttonAllAction()">Весь список</button>
+</div>
+<br>
+<h3 id="startText">Главная страница</h3>
+<table class="table" id="tableView" style="visibility: hidden">
+    <thead>
+    <tr>
+        <th scope="col">Место</th>
+        <th scope="col">ФИО</th>
+        <th scope="col">Статус</th>
+        <th scope="col">Опыт</th>
+        <th scope="col">Монеты</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>11</td>
+        <td>22</td>
+        <td>33</td>
+        <td>44</td>
+        <td>55</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
